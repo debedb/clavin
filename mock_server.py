@@ -77,6 +77,6 @@ class MockServer:
     
     def run(self):
         import uvicorn
-        print(f"Starting mock server on http://localhost:{self.port}")
+        print(f"Starting mock server on http://0.0.0.0:{self.port}")
         print(f"Collection ID: {self.collection_id}")
-        uvicorn.run(self.app, host="localhost", port=self.port)
+        uvicorn.run(self.app, host="0.0.0.0", port=self.port)
