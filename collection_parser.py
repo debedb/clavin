@@ -50,13 +50,24 @@ class CollectionParser:
         self.routes.append(route)
     
     def _extract_path_from_url(self, url: str) -> str:
+        # Remove any Postman variables first
         if "{{" in url:
-            url = re.sub(r'\{\{[^}]+\}\}', 'localhost:8000', url)
+            url = re.sub(r'\{\{[^}]+\}\}', '', url)
         
+        # Handle URLs that start with http/https
         if url.startswith("http"):
             from urllib.parse import urlparse
             parsed = urlparse(url)
-            return parsed.path
+            return parsed.path if parsed.path else "/"
+        
+        # Handle URLs that start with a domain/host
+        if "/" in url and not url.startswith("/"):
+            # Extract path after the first domain part
+            parts = url.split("/", 1)
+            if len(parts) > 1:
+                return "/" + parts[1]
+            return "/"
+        
         return url if url.startswith("/") else "/" + url
     
     def _build_path_from_url_obj(self, url_obj: Dict[str, Any]) -> str:

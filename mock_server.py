@@ -43,7 +43,25 @@ class MockServer:
         response_data = route["response"]
         
         async def endpoint_handler(request: Request):
-            return self._create_response(response_data)
+            # Log incoming request
+            print(f"\n>>> INCOMING REQUEST <<<")
+            print(f"Method: {request.method}")
+            print(f"Path: {request.url.path}")
+            print(f"Headers:")
+            for name, value in request.headers.items():
+                print(f"  {name}: {value}")
+            
+            response = self._create_response(response_data)
+            
+            # Log outgoing response
+            print(f"\n>>> OUTGOING RESPONSE <<<")
+            print(f"Status: {response.status_code}")
+            print(f"Headers:")
+            for name, value in response.headers.items():
+                print(f"  {name}: {value}")
+            print()
+            
+            return response
         
         endpoint_handler.__name__ = f"{method}_{path.replace('/', '_').replace('{', '').replace('}', '')}"
         
@@ -58,6 +76,9 @@ class MockServer:
         status_code = response_data.get("status_code", 200)
         headers = response_data.get("headers", {})
         body = response_data.get("body", "")
+        
+        # Remove headers that FastAPI handles automatically or that can cause issues
+        headers = {k: v for k, v in headers.items() if k.lower() not in ["content-length", "content-encoding"]}
         
         content_type = headers.get("Content-Type", "")
         
