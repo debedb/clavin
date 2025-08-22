@@ -27,13 +27,13 @@ POSTMAN_VAULT_KEY=your_postman_vault_key_here
 Start the mock server with a single Postman collection:
 
 ```bash
-clavin --collection YOUR_COLLECTION_ID
+python3 main.py --collection YOUR_COLLECTION_ID
 ```
 
 Or specify a custom port:
 
 ```bash
-clavin --collection YOUR_COLLECTION_ID --port 8080
+python3 main.py --collection YOUR_COLLECTION_ID --port 8080
 ```
 
 ### Multiple Collections
@@ -41,13 +41,13 @@ clavin --collection YOUR_COLLECTION_ID --port 8080
 Serve multiple collections simultaneously:
 
 ```bash
-clavin --collection COLLECTION_ID_1 --collection COLLECTION_ID_2
+python3 main.py --collection COLLECTION_ID_1 --collection COLLECTION_ID_2
 ```
 
 If collections have conflicting endpoints (same method and path), specify root paths to avoid conflicts:
 
 ```bash
-clavin --collection COLLECTION_ID_1:/api/v1 --collection COLLECTION_ID_2:/api/v2
+python3 main.py --collection COLLECTION_ID_1:/api/v1 --collection COLLECTION_ID_2:/api/v2
 ```
 
 This will serve:
