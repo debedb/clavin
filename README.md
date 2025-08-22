@@ -1,6 +1,6 @@
-# Postman Mock Server
+# Clavin - Postman Mock Server
 
-A Python clone of Postman's mock server functionality using FastAPI.
+A Python clone of Postman's mock server functionality using FastAPI with support for multiple collections.
 
 ## Setup
 
@@ -22,27 +22,51 @@ POSTMAN_VAULT_KEY=your_postman_vault_key_here
 
 ## Usage
 
-Start the mock server with a Postman collection ID:
+### Single Collection
+
+Start the mock server with a single Postman collection:
 
 ```bash
-python3 main.py YOUR_COLLECTION_ID
+clavin --collection YOUR_COLLECTION_ID
 ```
 
 Or specify a custom port:
 
 ```bash
-python3 main.py YOUR_COLLECTION_ID --port 8080
+clavin --collection YOUR_COLLECTION_ID --port 8080
 ```
 
+### Multiple Collections
+
+Serve multiple collections simultaneously:
+
+```bash
+clavin --collection COLLECTION_ID_1 --collection COLLECTION_ID_2
+```
+
+If collections have conflicting endpoints (same method and path), specify root paths to avoid conflicts:
+
+```bash
+clavin --collection COLLECTION_ID_1:/api/v1 --collection COLLECTION_ID_2:/api/v2
+```
+
+This will serve:
+- Collection 1's endpoints under `/api/v1/*`
+- Collection 2's endpoints under `/api/v2/*`
+
 The server will:
-1. Fetch the collection from Postman API
-2. Parse all requests and their examples
-3. Start a FastAPI server on localhost
-4. Serve mock responses based on the first example for each request
+1. Fetch all specified collections from Postman API
+2. Parse all requests and their examples from each collection
+3. Detect and report any endpoint conflicts between collections
+4. Start a FastAPI server on localhost
+5. Serve mock responses based on the first example for each request
 
 ## Features
 
 - ✅ Fetches collections from Postman API
+- ✅ Supports multiple collections simultaneously
+- ✅ Automatic conflict detection between collections
+- ✅ Root path specification to avoid endpoint conflicts
 - ✅ Parses requests and examples from collections
 - ✅ Serves mock responses on localhost
 - ✅ Supports custom port or random port selection
